@@ -9,12 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,6 +26,7 @@ import com.easyservice.weatherapp.ui.components.FutureWeatherForecast
 import com.easyservice.weatherapp.ui.components.SearchBar
 import com.easyservice.weatherapp.ui.components.TodayWeatherForecast
 import com.easyservice.weatherapp.ui.components.WeatherCard
+import com.easyservice.weatherapp.ui.theme.Purple40
 import com.easyservice.weatherapp.ui.theme.WeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,24 +55,32 @@ class MainActivity : ComponentActivity() {
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Column(
+                    LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(Purple40)
                     ) {
-                        SearchBar(
-                            searchText = searchText,
-                            onSearchTextChange = viewModel::onSearchTextChange,
-                            onSearchSubmit = viewModel::getWeatherInConcretePlace
-                        )
-                        WeatherCard(
-                            state = viewModel.state,
-                            backgroundColor = Color.DarkGray
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        TodayWeatherForecast(state = viewModel.state)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        FutureWeatherForecast(state = viewModel.state)
+                        item {
+                            SearchBar(
+                                searchText = searchText,
+                                onSearchTextChange = viewModel::onSearchTextChange,
+                                onSearchSubmit = viewModel::getWeatherInConcretePlace
+                            )
+                        }
+                        item {
+                            WeatherCard(
+                                state = viewModel.state,
+                                backgroundColor = Color.DarkGray
+                            )
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            TodayWeatherForecast(state = viewModel.state)
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            FutureWeatherForecast(state = viewModel.state)
+                        }
                     }
                     if (viewModel.state.isLoading) {
                         CircularProgressIndicator(
